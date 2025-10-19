@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory - Mini Giochi</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-lr38q4zwZMEY0sHIapTKNZ0vbeqH1K+ctPS+lCkp5h5YFo0vQPfDb9+c2CgLa3Q4X2l29XqgQrjr+f4kEoSjfQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      .memory-container {
+        max-width: 600px;
+        margin: 1rem auto;
+        text-align: center;
+      }
+      .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 1rem;
+      }
+      .card {
+        background: #007bff;
+        color: #fff;
+        border-radius: 6px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .card.flipped {
+        background: #fff;
+        color: #333;
+        cursor: default;
+      }
+      .status {
+        margin-top: 0.5rem;
+        font-size: 1.1rem;
+      }
+      .restart {
+        margin-top: 1rem;
+      }
+      .restart button {
+        padding: 0.5rem 1rem;
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .restart button:hover {
+        background: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Memory</h1>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="snake.html">Snake</a>
+        <a href="tictactoe.html">Tic&nbsp;Tac&nbsp;Toe</a>
+        <a href="memory.html" class="active">Memory</a>
+        <a href="../chat/index.html">3D Chat</a>
+      </nav>
+    </header>
+    <main>
+      <div class="memory-container">
+        <div class="status" id="status">Abbina tutte le coppie!</div>
+        <div class="memory-grid" id="memory-grid"></div>
+        <div class="restart">
+          <button id="restart-memory"><i class="fas fa-redo"></i> Rigioca</button>
+        </div>
+      </div>
+    </main>
+    <script src="memory.js"></script>
+  </body>
+</html>

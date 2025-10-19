@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Giochi Web e Chat 3D</title>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-lr38q4zwZMEY0sHIapTKNZ0vbeqH1K+ctPS+lCkp5h5YFo0vQPfDb9+c2CgLa3Q4X2l29XqgQrjr+f4kEoSjfQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Mini Giochi Web e Chat 3D</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="games/snake.html">Snake</a>
+        <a href="games/tictactoe.html">Tic&nbsp;Tac&nbsp;Toe</a>
+        <a href="games/memory.html">Memory</a>
+        <a href="chat/index.html">3D Chat</a>
+      </nav>
+    </header>
+    <main>
+      <p style="font-size: 1.2rem; text-align: center;">
+        Gioca a una varietà di giochi web gratuiti e partecipa a una chat 3D in
+        tempo reale!
+      </p>
+      <div class="game-grid">
+        <div class="game-card">
+          <img src="img/snake.png" alt="Snake" />
+          <h3>Snake</h3>
+          <p>Guida il serpente e mangia le mele per crescere!</p>
+          <a href="games/snake.html" aria-label="Gioca a Snake"
+            >Gioca&nbsp;<i class="fas fa-play"></i
+          ></a>
+        </div>
+        <div class="game-card">
+          <img src="img/tictactoe.png" alt="Tic Tac Toe" />
+          <h3>Tic&nbsp;Tac&nbsp;Toe</h3>
+          <p>Metti in fila tre simboli per vincere.</p>
+          <a href="games/tictactoe.html" aria-label="Gioca a Tic Tac Toe"
+            >Gioca&nbsp;<i class="fas fa-play"></i
+          ></a>
+        </div>
+        <div class="game-card">
+          <img src="img/memory.png" alt="Memory" />
+          <h3>Memory</h3>
+          <p>Trova le coppie di carte identiche per completare il puzzle.</p>
+          <a href="games/memory.html" aria-label="Gioca a Memory"
+            >Gioca&nbsp;<i class="fas fa-play"></i
+          ></a>
+        </div>
+        <div class="game-card">
+          <img src="img/chat.png" alt="3D Chat" />
+          <h3>3D&nbsp;Chat</h3>
+          <p>Incontra amici in un ambiente 3D e chatta in tempo reale.</p>
+          <a href="chat/index.html" aria-label="Entra nella chat 3D"
+            >Entra&nbsp;<i class="fas fa-comments"></i
+          ></a>
+        </div>
+      </div>
+    </main>
+    <footer style="text-align:center; padding:1rem; font-size:0.8rem; background:#f1f1f1;">
+      &copy; <span id="year"></span> Mini Giochi Web. Creato con &hearts; in Italia.
+    </footer>
+    <script>
+      // Aggiorna automaticamente l'anno nel footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
