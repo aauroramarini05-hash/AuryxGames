@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuryxPlus – YouTube Explorer avanzato</title>
+    <!-- Google font for retro‑futuristic logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <!-- Animate On Scroll library for smooth fades and slides -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <!-- Our custom styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Sidebar navigation with categories -->
+    <aside>
+        <h1>Auryx<span class="plus">+</span></h1>
+        <nav>
+        <button id="btn-trending" data-cat="">Tendenze Generali</button>
+        <button data-cat="10">Tendenze Musica</button>
+        <button data-cat="20">Tendenze Gaming</button>
+        <button data-cat="24">Tendenze Intrattenimento</button>
+        <button data-cat="1">Tendenze Film &amp; Animazione</button>
+        <button data-cat="17">Tendenze Sport</button>
+        <button data-cat="22">Tendenze Persone &amp; Blog</button>
+        <button data-cat="23">Tendenze Commedia</button>
+        <button data-cat="25">Tendenze News &amp; Politica</button>
+        <button data-cat="26">Tendenze How‑To &amp; Style</button>
+        <button data-cat="27">Tendenze Educazione</button>
+        <button data-cat="28">Tendenze Scienza &amp; Tecnologia</button>
+        <hr>
+        <!-- Live counters sections -->
+        <button data-page="live-subs">Live Iscritti</button>
+        <button data-page="live-views">Live Visualizzazioni</button>
+        <hr>
+        <button id="btn-latest">Ultimi Video</button>
+        </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main>
+        <!-- Search controls -->
+        <section id="search-bar">
+            <input type="text" id="search-input" placeholder="Cerca video o canale…" aria-label="campo ricerca">
+            <button id="search-btn" aria-label="Cerca">Cerca</button>
+            <!-- Settings button opens the preferences panel -->
+            <button id="settings-btn" class="icon-btn" aria-label="Impostazioni">⚙️</button>
+        </section>
+        <!-- Stats bar used to display aggregated info when needed -->
+        <section id="stats-bar" class="hidden"></section>
+        <!-- Container for video cards -->
+        <section id="video-list" data-aos="fade-up">
+            <p>Caricamento tendenze…</p>
+        </section>
+    </main>
+
+    <!-- Modal for detailed view -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modal-content">
+            <button id="modal-close" aria-label="Chiudi dettagli">×</button>
+            <!-- Content populated by JS -->
+        </div>
+    </div>
+
+    <!-- Settings modal for user preferences -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content settings-content">
+            <button id="settings-close" aria-label="Chiudi impostazioni">×</button>
+            <h2>Impostazioni</h2>
+            <form id="settings-form">
+                <label>Regione:
+                    <select id="setting-region">
+                        <option value="IT">Italia</option>
+                        <option value="US">USA</option>
+                        <option value="GB">Regno Unito</option>
+                        <option value="DE">Germania</option>
+                        <option value="FR">Francia</option>
+                        <option value="ES">Spagna</option>
+                    </select>
+                </label>
+                <label>Numero risultati:
+                    <select id="setting-maxResults">
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                    </select>
+                </label>
+                <label>Tema:
+                    <select id="setting-theme">
+                        <option value="dark">Scuro</option>
+                        <option value="light">Chiaro</option>
+                    </select>
+                </label>
+                <label>Auto‑refresh tendenze (minuti):
+                    <input type="number" id="setting-refresh" min="0" value="0">
+                </label>
+                <button type="submit" class="settings-save">Salva</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video player overlay with custom controls -->
+    <div id="player-overlay" class="modal hidden">
+        <div class="player-wrapper">
+            <div id="player-container"></div>
+            <div class="player-controls">
+                <button id="play-pause">▶</button>
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" min="0" max="100" value="0">
+                <span id="duration-time">0:00</span>
+                <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="1">
+                <button id="fullscreen-btn" aria-label="Schermo intero">⛶</button>
+                <button id="player-close" aria-label="Chiudi player">×</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AOS library -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <!-- Chart.js for optional charts; loaded only when needed -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- YouTube Iframe API for custom player -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- Main script -->
+    <script src="script.js"></script>
+</body>
+</html>
