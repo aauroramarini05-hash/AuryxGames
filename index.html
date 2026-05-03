@@ -5,121 +5,273 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>La Grande Ruota delle Parole</title>
   <style>
-    :root{--bg:#070b1a;--panel:#121a35;--panel2:#1b2752;--txt:#f3f6ff;--muted:#a9b5e5;--accent:#42e2ff;--good:#22d38a;--bad:#ff5f7a;--gold:#ffd35a;--shadow:0 12px 30px rgba(0,0,0,.35)}
-    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 30% 20%,#15275a,var(--bg) 45%);color:var(--txt);min-height:100vh}
-    .lights::before,.lights::after{content:"";position:fixed;inset:-20%;pointer-events:none;background:conic-gradient(from 0deg,transparent 0 30deg,rgba(66,226,255,.06) 30deg 60deg,transparent 60deg 90deg);animation:spin 16s linear infinite;z-index:-1}.lights::after{animation-direction:reverse;animation-duration:24s}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .screen{display:none;max-width:1200px;margin:auto;padding:16px}.screen.active{display:block}
-    .card{background:linear-gradient(170deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:var(--shadow);padding:18px}
-    h1,h2,h3{margin:.2rem 0 .8rem;text-align:center}
-    .btn{border:0;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#2a78ff,#28b8ff);color:white;font-weight:700;cursor:pointer;transition:.2s transform,.2s opacity}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:not-allowed}
-    .btn.alt{background:linear-gradient(90deg,#2c355f,#46579a)}.btn.warn{background:linear-gradient(90deg,#b23a57,#ff5f7a)}
-    .grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0d1330;color:#fff}
-    label{font-size:.9rem;color:var(--muted)}
-    .main-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:14px}.wheel-wrap{display:flex;justify-content:center;align-items:center;position:relative}
-    #wheel{width:min(88vw,420px);height:min(88vw,420px);filter:drop-shadow(0 12px 20px rgba(0,0,0,.35))}
-    .pointer{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:26px solid #ffd35a;filter:drop-shadow(0 2px 4px #000)}
-    .board{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;min-height:130px;background:#0f1738;border-radius:14px}
-    .tile{width:34px;height:42px;display:flex;align-items:center;justify-content:center;background:#1e2b61;border-radius:8px;font-size:1.2rem;font-weight:800;border:1px solid rgba(255,255,255,.1);transition:.22s}
-    .tile.space,.tile.punct{background:transparent;border-color:transparent;color:#95a3dd}
-    .tile.reveal{animation:pop .3s ease}@keyframes pop{0%{transform:scale(.6)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
-    .players{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.player{background:#0d1330;border:1px solid rgba(255,255,255,.12);padding:8px;border-radius:10px}.player.active{outline:2px solid var(--accent);box-shadow:0 0 0 4px rgba(66,226,255,.2)}
-    .kbd{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}.key{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#19265a;color:#fff;cursor:pointer}.key:disabled{opacity:.35}
-    .msg{margin:8px 0;padding:8px 10px;background:#0b1230;border-left:4px solid var(--accent);border-radius:8px;min-height:38px}
-    .row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{flex:1}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-    .flash{animation:flash .6s alternate 4}@keyframes flash{from{filter:brightness(1)}to{filter:brightness(1.35)}}
-    @media (max-width:900px){.main-layout{grid-template-columns:1fr}.kbd{grid-template-columns:repeat(7,1fr)}}
+    :root{
+      --bg:#050913;--bg2:#0e1a3a;--panel:#121c3f;--panel2:#1f2f64;--text:#f5f7ff;--muted:#9fb0ea;
+      --primary:#2fa8ff;--secondary:#7b5cff;--ok:#1ed38a;--danger:#ff5a7c;--gold:#ffd45f;
+      --radius:16px;--shadow:0 10px 30px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box} body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:radial-gradient(circle at 15% 10%,#1b2f74,var(--bg) 50%), radial-gradient(circle at 90% 80%,#1b2b56,transparent 30%);
+      min-height:100vh}
+    .screen{display:none;max-width:1250px;margin:auto;padding:16px}.screen.active{display:block}
+    .card{background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    h1,h2,h3{margin:.3rem 0 .8rem;text-align:center}
+    .grid{display:grid;gap:12px}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{font-size:.9rem;color:var(--muted)} input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0e1635;color:#fff}
+    .btn{border:0;padding:10px 14px;border-radius:12px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(90deg,var(--primary),#27d1ff)}
+    .btn.alt{background:linear-gradient(90deg,#3d4f92,#5d73be)} .btn.warn{background:linear-gradient(90deg,#b63f57,var(--danger))}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .row{display:flex;flex-wrap:wrap;gap:8px}.row .btn{flex:1}
+    .wheelWrap{position:relative;display:flex;align-items:center;justify-content:center}
+    #wheel{width:min(88vw,460px);height:min(88vw,460px)}
+    .pointer{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:28px solid var(--gold);filter:drop-shadow(0 2px 4px black)}
+    .category{text-align:center;font-weight:700;color:var(--gold)}
+    .board{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:130px;background:#0c1433;border-radius:12px;padding:10px}
+    .tile{width:34px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#203271;border:1px solid rgba(255,255,255,.15);font-weight:800;font-size:1.1rem}
+    .tile.space,.tile.punct{background:transparent;border-color:transparent;color:#90a1da}
+    .tile.reveal{animation:reveal .3s ease}@keyframes reveal{from{transform:scale(.6)}to{transform:scale(1)}}
+    .players{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}.player{background:#0c1433;border:1px solid rgba(255,255,255,.15);padding:10px;border-radius:10px}.player.active{outline:2px solid #45d8ff}
+    .kbd{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}.key{padding:8px;border-radius:8px;background:#1f2f67;border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer}.key:disabled{opacity:.35}
+    .msg{min-height:42px;padding:10px;border-radius:10px;background:#0a1330;border-left:4px solid #35d0ff;margin:8px 0}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .pill{padding:6px 10px;background:#0a1330;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
+    .solveBox{display:none;gap:8px;margin-top:8px}.solveBox.active{display:flex}
+    @media (max-width:920px){.layout{grid-template-columns:1fr}.kbd{grid-template-columns:repeat(7,1fr)}}
   </style>
 </head>
-<body class="lights">
-  <main>
-    <section id="start" class="screen active">
+<body>
+<main>
+  <section id="start" class="screen active">
+    <div class="card">
+      <h1>🎡 La Grande Ruota delle Parole</h1>
+      <p style="text-align:center;color:var(--muted)">Un quiz show italiano originale, completo e senza asset protetti.</p>
+      <div class="grid g3">
+        <div><label>Giocatori umani</label><select id="humanCount"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
+        <div><label>Difficoltà CPU</label><select id="difficulty"><option value="facile">Facile</option><option value="media" selected>Media</option><option value="difficile">Difficile</option></select></div>
+        <div><label>Audio</label><select id="audio"><option value="on">Attivo</option><option value="off">Silenzioso</option></select></div>
+      </div>
+      <div id="nameGrid" class="grid g3" style="margin-top:12px"></div>
+      <div class="row" style="margin-top:12px"><button id="startBtn" class="btn">Nuova partita</button><button id="resetStorage" class="btn warn">Reset salvataggi</button></div>
+    </div>
+  </section>
+
+  <section id="game" class="screen">
+    <div class="top"><h2 id="roundLabel">Round 1/3</h2><div class="pill">Miglior punteggio: <strong id="bestScore">0</strong></div></div>
+    <div class="layout">
+      <div class="card wheelWrap"><div class="pointer"></div><canvas id="wheel" width="500" height="500"></canvas></div>
       <div class="card">
-        <h1>🎯 La Grande Ruota delle Parole</h1>
-        <p style="text-align:center;color:var(--muted)">Quiz televisivo originale ispirato ai giochi di frasi e fortuna.</p>
-        <div class="grid g3">
-          <div><label>Numero giocatori umani</label><select id="numPlayers"><option>1</option><option selected>2</option><option>3</option></select></div>
-          <div><label>Difficoltà CPU</label><select id="difficulty"><option value="facile">Facile</option><option value="media" selected>Media</option><option value="difficile">Difficile</option></select></div>
-          <div><label>Audio</label><select id="audioMode"><option value="on">Attivo</option><option value="off">Silenzioso</option></select></div>
-        </div>
-        <div id="names" class="grid g3" style="margin-top:10px"></div>
-        <div class="row" style="margin-top:14px">
-          <button class="btn" id="newGameBtn">Nuova partita</button>
-          <button class="btn alt" id="resetSave">Reset salvataggi</button>
-        </div>
+        <div class="category" id="category">Categoria</div>
+        <div id="board" class="board"></div>
+        <div id="message" class="msg">Premi "Gira la ruota" per iniziare.</div>
+        <div id="spinResult" class="pill" style="text-align:center;margin-bottom:8px">Risultato ruota: -</div>
+        <div class="row"><button id="spinBtn" class="btn">Gira la ruota</button><button id="buyBtn" class="btn alt">Compra vocale (-250)</button><button id="solveBtn" class="btn alt">Risolvi</button></div>
+        <div id="solveBox" class="solveBox"><input id="solveInput" placeholder="Inserisci frase completa" /><button id="confirmSolve" class="btn">Conferma</button></div>
+        <div class="row" style="margin-top:8px"><button id="nextRoundBtn" class="btn alt">Nuovo round</button><button id="newGameBtn" class="btn warn">Nuova partita</button></div>
       </div>
-    </section>
+    </div>
+    <div class="card" style="margin-top:12px"><h3>Giocatori</h3><div id="players" class="players"></div></div>
+    <div class="card" style="margin-top:12px"><h3>Tastiera</h3><div id="keyboard" class="kbd"></div></div>
+  </section>
 
-    <section id="game" class="screen">
-      <div class="topbar"><h2 id="roundTitle">Round 1/3</h2><div>Miglior punteggio: <strong id="bestScore">0</strong></div></div>
-      <div class="main-layout">
-        <div class="card wheel-wrap"><div class="pointer"></div><canvas id="wheel" width="460" height="460"></canvas></div>
-        <div class="card">
-          <h3 id="category"></h3>
-          <div id="board" class="board"></div>
-          <div id="message" class="msg">Benvenuti in studio!</div>
-          <div class="row"><button class="btn" id="spinBtn">Gira la ruota</button><button class="btn alt" id="buyVowelBtn">Compra vocale (-250)</button><button class="btn alt" id="solveBtn">Risolvi</button></div>
-          <div class="row" style="margin-top:8px"><button class="btn alt" id="newRoundBtn">Nuovo round</button><button class="btn warn" id="restartBtn">Nuova partita</button></div>
-          <p id="spinResult" style="text-align:center;color:var(--gold);font-weight:700"></p>
-        </div>
-      </div>
-      <div class="card" style="margin-top:12px"><h3>Giocatori</h3><div id="players" class="players"></div></div>
-      <div class="card" style="margin-top:12px"><h3>Tastiera</h3><div id="keyboard" class="kbd"></div></div>
-    </section>
-
-    <section id="end" class="screen"><div class="card"><h2>🏆 Partita conclusa</h2><p id="winner"></p><ol id="ranking"></ol><button class="btn" id="playAgain">Rigioca</button></div></section>
-  </main>
+  <section id="end" class="screen">
+    <div class="card"><h2>🏆 Fine partita</h2><p id="winner"></p><ol id="ranking"></ol><button id="againBtn" class="btn">Rigioca</button></div>
+  </section>
+</main>
 <script>
-(()=>{
-const phrases=[
-['Proverbi','Chi dorme non piglia pesci'],['Proverbi','Tra il dire e il fare c e di mezzo il mare'],['Proverbi','Ride bene chi ride ultimo'],['Proverbi','Meglio tardi che mai'],['Proverbi','L abito non fa il monaco'],['Proverbi','Rosso di sera bel tempo si spera'],['Cinema','La dolce vita'],['Cinema','Nuovo cinema paradiso'],['Cinema','Il postino'],['Cinema','La grande bellezza'],['Cinema','Perfetti sconosciuti'],['Cinema','Mediterraneo'],['Musica','Nel blu dipinto di blu'],['Musica','Azzurro'],['Musica','L italiano vero'],['Musica','Con te partiro'],['Musica','Viva la vita'],['Geografia','Roma caput mundi'],['Geografia','Il giro d italia'],['Geografia','La laguna di venezia'],['Geografia','Il vesuvio domina il golfo'],['Geografia','Le cinque terre'],['Cucina italiana','Spaghetti alla carbonara'],['Cucina italiana','Risotto alla milanese'],['Cucina italiana','Pizza margherita'],['Cucina italiana','Tiramisu fatto in casa'],['Cucina italiana','Pesto genovese'],['Sport','Calcio di rigore'],['Sport','Campionato di serie a'],['Sport','Vittoria al fotofinish'],['Sport','Maratona cittadina'],['Sport','Coppa italia'],['Cultura generale','La penna e piu forte della spada'],['Cultura generale','Il sapere non pesa'],['Cultura generale','Biblioteca nazionale'],['Cultura generale','Scienza e coscienza'],['Modi di dire','In bocca al lupo'],['Modi di dire','Acqua in bocca'],['Modi di dire','Avere le mani in pasta'],['Modi di dire','Essere al settimo cielo'],['Modi di dire','Prendere due piccioni con una fava'],['Modi di dire','Andare d accordo']
-];
-const wheel=[100,200,300,400,500,750,1000,'Bancarotta','Perdi turno','Jolly','Bonus'];
-const vowels='AEIOU',letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-let state,audioCtx,mute=false;
-const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
-const norm=s=>s.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z]/g,'');
-function beep(f=400,d=.08,t='sine',v=.03){if(mute)return;audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
-function save(){localStorage.setItem('grandeRuotaSave',JSON.stringify({best:state.best,names:state.players.map(p=>p.name),audio:mute?'off':'on'}))}
-function load(){try{return JSON.parse(localStorage.getItem('grandeRuotaSave')||'{}')}catch{return {}}}
-function screen(id){qa('.screen').forEach(s=>s.classList.remove('active'));q('#'+id).classList.add('active')}
-function initNames(){const n=+q('#numPlayers').value;const wrap=q('#names');wrap.innerHTML='';for(let i=0;i<n;i++)wrap.insertAdjacentHTML('beforeend',`<div><label>Nome giocatore ${i+1}</label><input id="p${i}" value="Giocatore ${i+1}"></div>`)}
-function startGame(){const n=+q('#numPlayers').value,diff=q('#difficulty').value;mute=q('#audioMode').value==='off';const saved=load();state={round:1,maxRounds:3,turn:0,spun:false,spinValue:0,bonus:false,used:new Set(),phrase:'',category:'',revealed:[],difficulty:diff,best:saved.best||0,players:[]};for(let i=0;i<n;i++)state.players.push({name:q('#p'+i).value.trim()||`Giocatore ${i+1}`,cpu:false,round:0,total:0,jolly:false});if(n===1){state.players.push({name:'CPU Alfa',cpu:true,round:0,total:0,jolly:false},{name:'CPU Beta',cpu:true,round:0,total:0,jolly:false})}
-newRound(true);screen('game');updateAll();cpuTurn();}
-function pickPhrase(){let idx=Math.floor(Math.random()*phrases.length);let [cat,ph]=phrases[idx];state.category=cat;state.phrase=ph.toUpperCase();state.revealed=[...state.phrase].map(ch=>!/[A-Z]/.test(ch));state.used.clear()}
-function renderBoard(){const b=q('#board');b.innerHTML='';[...state.phrase].forEach((ch,i)=>{const d=document.createElement('div');d.className='tile '+(!/[A-Z]/.test(ch)?(/[ ]/.test(ch)?'space':'punct'):'');d.textContent=state.revealed[i]?ch:'■';b.appendChild(d)})}
-function renderPlayers(){q('#players').innerHTML=state.players.map((p,i)=>`<div class="player ${i===state.turn?'active':''}"><strong>${p.name}${p.cpu?' 🤖':''}</strong><br>Round: ${p.round} pt<br>Totale: ${p.total} pt<br>Jolly: ${p.jolly?'Sì':'No'}</div>`).join('')}
-function renderKbd(){q('#keyboard').innerHTML=letters.map(l=>`<button class="key" data-l="${l}" ${state.used.has(l)?'disabled':''}>${l}</button>`).join('')}
-function msg(t){q('#message').textContent=t}
-function nextTurn(){state.spun=false;state.bonus=false;state.spinValue=0;state.turn=(state.turn+1)%state.players.length;renderPlayers();msg(`Turno a ${state.players[state.turn].name}`);q('#game').classList.add('flash');setTimeout(()=>q('#game').classList.remove('flash'),500);cpuTurn()}
-function revealLetter(l){let c=0;[...state.phrase].forEach((ch,i)=>{if(ch===l&&!state.revealed[i]){state.revealed[i]=true;c++}});renderBoard();return c}
-function allRevealed(){return state.revealed.every(Boolean)}
-function scoreFreqLetters(){return ['R','S','T','N','L','C','D','M','P','G','B','F','V','H','Q','Z','J','K','W','X','Y']}
-function chooseCpuLetter(vowel=false){let pool=letters.filter(l=>!state.used.has(l)&&((vowel&&vowels.includes(l))||(!vowel&&!vowels.includes(l))));if(state.difficulty==='facile')return pool[Math.floor(Math.random()*pool.length)];if(state.difficulty==='media'){const pref=(vowel?['A','E','I','O','U']:scoreFreqLetters());for(const p of pref)if(pool.includes(p))return p;return pool[0]}const target=[...new Set([...state.phrase].filter(ch=>/[A-Z]/.test(ch)&&!state.used.has(ch)&&((vowel&&vowels.includes(ch))||(!vowel&&!vowels.includes(ch))))];if(target.length&&Math.random()<.8)return target[Math.floor(Math.random()*target.length)];const pref=(vowel?['A','E','I','O','U']:scoreFreqLetters());return pref.find(p=>pool.includes(p))||pool[0]}
-function solveAttempt(name,byCpu=false){let ans=byCpu?state.phrase:q('#solveInput')?.value||prompt('Inserisci la frase completa:')||'';if(norm(ans)===norm(state.phrase)){beep(740,.2,'triangle');state.players[state.turn].total+=state.players[state.turn].round;state.best=Math.max(state.best,...state.players.map(p=>p.total));save();msg(`${name} ha risolto la frase!`);if(state.round>=state.maxRounds)return endGame();state.round++;setTimeout(()=>newRound(false),900)} else {beep(160,.15,'sawtooth');msg('Soluzione errata. Turno perso.');nextTurn()}updateAll()}
-function applyWheel(res){const p=state.players[state.turn];if(res==='Bancarotta'){if(p.jolly){p.jolly=false;msg(`${p.name} usa il Jolly e evita la Bancarotta!`)}else{p.round=0;msg('Bancarotta! Punteggio round azzerato.');beep(100,.35,'square');nextTurn()}return false}
-if(res==='Perdi turno'){if(p.jolly){p.jolly=false;msg(`${p.name} usa il Jolly e continua!`);return true;}msg('Perdi turno!');nextTurn();return false}
-if(res==='Jolly'){p.jolly=true;msg(`${p.name} ha guadagnato un Jolly!`);state.spun=false;renderPlayers();return false}
-if(res==='Bonus'){state.bonus=true;msg('Bonus attivo: prossima consonante raddoppia!');state.spinValue=500;state.spun=true;return true}
-state.spinValue=res;state.spun=true;msg(`Hai ottenuto ${res} punti.`);return true}
-function chooseLetter(l){const p=state.players[state.turn];if(state.used.has(l))return;const isV=vowels.includes(l);if(isV){if(p.round<250){msg('Punti insufficienti per comprare una vocale.');return}p.round-=250}
-if(!isV&&!state.spun){msg('Devi girare la ruota prima di scegliere una consonante.');return}
-state.used.add(l);renderKbd();const hits=revealLetter(l);if(hits>0){beep(580,.1);if(isV){msg(`Vocale ${l} trovata (${hits}).`)}else{let val=state.spinValue*(state.bonus?2:1)*hits;p.round+=val;msg(`Consonante ${l} trovata ${hits} volte: +${val} pt`)}state.spun=false;state.bonus=false;if(allRevealed())return solveAttempt(p.name,true)}
-else{beep(220,.1,'square');msg(`La lettera ${l} non c'è.`);nextTurn()}updateAll();cpuTurn()}
-function spinWheel(){if(state.animating)return;state.animating=true;let ang=state.angle||0;let target=ang+(Math.random()*6+6)*Math.PI;let t=0,d=2200;beep(500,.06);const tick=setInterval(()=>beep(350+Math.random()*180,.02,'square',.015),110);
-const start=performance.now();function frame(now){t=now-start;let k=Math.min(t/d,1),ease=1-Math.pow(1-k,3);state.angle=ang+(target-ang)*ease;drawWheel();if(k<1)requestAnimationFrame(frame);else{clearInterval(tick);state.animating=false;const seg=wheel.length;let a=(state.angle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);let idx=Math.floor(((Math.PI*1.5-a+Math.PI*2)%(Math.PI*2))/(Math.PI*2/seg));let res=wheel[idx];q('#spinResult').textContent='Risultato ruota: '+res;applyWheel(res);updateAll();cpuTurn()}}requestAnimationFrame(frame)}
-function drawWheel(){const c=q('#wheel'),x=c.getContext('2d'),R=205,seg=wheel.length,step=(Math.PI*2)/seg;x.clearRect(0,0,c.width,c.height);x.save();x.translate(230,230);x.rotate(state.angle||0);for(let i=0;i<seg;i++){x.beginPath();x.moveTo(0,0);x.arc(0,0,R,i*step,(i+1)*step);x.closePath();x.fillStyle=`hsl(${i*360/seg} 80% 55%)`;x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.stroke();x.save();x.rotate(i*step+step/2);x.fillStyle='#fff';x.font='bold 18px sans-serif';x.textAlign='right';x.fillText(wheel[i],R-12,6);x.restore()}x.beginPath();x.arc(0,0,36,0,Math.PI*2);x.fillStyle='#0c1230';x.fill();x.restore()}
-function newRound(first=false){state.players.forEach(p=>p.round=0);pickPhrase();state.spun=false;state.spinValue=0;q('#spinResult').textContent='';msg(first?'Inizia la partita!':'Nuovo round iniziato!');updateAll()}
-function endGame(){screen('end');let rank=[...state.players].sort((a,b)=>b.total-a.total);q('#winner').textContent=`Vincitore: ${rank[0].name} con ${rank[0].total} punti`;q('#ranking').innerHTML=rank.map(p=>`<li>${p.name}: ${p.total} pt</li>`).join('')}
-function cpuTurn(){const p=state.players[state.turn];if(!p?.cpu||state.animating)return;setTimeout(()=>{let ratio=state.revealed.filter(Boolean).length/state.revealed.length;let trySolve=Math.random()<(state.difficulty==='difficile'?ratio*.7:state.difficulty==='media'?ratio*.4:ratio*.2);if(trySolve&&ratio>.45)return solveAttempt(p.name,true);
-if(p.round>=250&&Math.random()<.35){chooseLetter(chooseCpuLetter(true));return}
-if(!state.spun)spinWheel();else chooseLetter(chooseCpuLetter(false));},700)}
-function updateAll(){q('#roundTitle').textContent=`Round ${state.round}/${state.maxRounds}`;q('#category').textContent='Categoria: '+state.category;renderBoard();renderPlayers();renderKbd();q('#bestScore').textContent=state.best;save()}
-q('#numPlayers').addEventListener('change',initNames);q('#newGameBtn').onclick=startGame;q('#spinBtn').onclick=()=>{spinWheel()};q('#buyVowelBtn').onclick=()=>chooseLetter(prompt('Scegli vocale (A,E,I,O,U):')?.toUpperCase().slice(0,1)||'');q('#solveBtn').onclick=()=>solveAttempt(state.players[state.turn].name,false);q('#newRoundBtn').onclick=()=>{if(state.round<state.maxRounds){state.round++;newRound(false)}else endGame()};q('#restartBtn').onclick=()=>screen('start');q('#playAgain').onclick=()=>screen('start');
-q('#resetSave').onclick=()=>{localStorage.removeItem('grandeRuotaSave');alert('Salvataggi resettati.')};q('#keyboard').addEventListener('click',e=>{if(e.target.dataset.l)chooseLetter(e.target.dataset.l)});
-const sv=load();if(sv.audio)q('#audioMode').value=sv.audio;initNames();drawWheel();
+(() => {
+  const PHRASES = [
+    ['Proverbi','Chi dorme non piglia pesci'],['Proverbi','Tra il dire e il fare c e di mezzo il mare'],['Proverbi','Ride bene chi ride ultimo'],['Proverbi','Meglio tardi che mai'],['Proverbi','L abito non fa il monaco'],['Proverbi','Rosso di sera bel tempo si spera'],
+    ['Cinema','La dolce vita'],['Cinema','Nuovo cinema paradiso'],['Cinema','Il postino'],['Cinema','La grande bellezza'],['Cinema','Perfetti sconosciuti'],['Cinema','Mediterraneo'],
+    ['Musica','Nel blu dipinto di blu'],['Musica','Azzurro'],['Musica','L italiano vero'],['Musica','Con te partiro'],['Musica','Viva la vita'],
+    ['Geografia','Roma caput mundi'],['Geografia','Il giro d italia'],['Geografia','La laguna di venezia'],['Geografia','Il vesuvio domina il golfo'],['Geografia','Le cinque terre'],
+    ['Cucina italiana','Spaghetti alla carbonara'],['Cucina italiana','Risotto alla milanese'],['Cucina italiana','Pizza margherita'],['Cucina italiana','Tiramisu fatto in casa'],['Cucina italiana','Pesto genovese'],
+    ['Sport','Calcio di rigore'],['Sport','Campionato di serie a'],['Sport','Vittoria al fotofinish'],['Sport','Maratona cittadina'],['Sport','Coppa italia'],
+    ['Cultura generale','La penna e piu forte della spada'],['Cultura generale','Il sapere non pesa'],['Cultura generale','Biblioteca nazionale'],['Cultura generale','Scienza e coscienza'],
+    ['Modi di dire','In bocca al lupo'],['Modi di dire','Acqua in bocca'],['Modi di dire','Avere le mani in pasta'],['Modi di dire','Essere al settimo cielo'],['Modi di dire','Prendere due piccioni con una fava'],['Modi di dire','Andare d accordo']
+  ];
+  const WHEEL = [100,200,300,400,500,750,1000,'Bancarotta','Perdi turno','Jolly','Bonus'];
+  const VOWELS = 'AEIOU';
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const ROUND_COUNT = 3;
+  let state = null;
+
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const normalize = s => (s||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z]/g,'');
+
+  const audio = {ctx:null,enabled:true,ensure(){if(!this.ctx)this.ctx=new(window.AudioContext||window.webkitAudioContext)();},tone(f=440,d=0.08,t='sine',v=.03){if(!this.enabled)return;this.ensure();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+d);},click(){this.tone(620,.03,'square',.02)},ok(){this.tone(740,.09,'triangle',.03)},err(){this.tone(170,.12,'sawtooth',.03)},win(){this.tone(520,.08);setTimeout(()=>this.tone(700,.1),90);setTimeout(()=>this.tone(900,.15),200)},bankrupt(){this.tone(120,.28,'square',.04)}};
+
+  function saveLocal(){localStorage.setItem('grandeRuotaSave',JSON.stringify({audio:audio.enabled?'on':'off',best:state?.best||0,names:state?.players?.map(p=>p.name)||[]}));}
+  function loadLocal(){try{return JSON.parse(localStorage.getItem('grandeRuotaSave')||'{}')}catch{return {}}}
+  function showScreen(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+id).classList.add('active');}
+
+  function buildNameInputs(){const n=+$('#humanCount').value;const box=$('#nameGrid');box.innerHTML='';for(let i=0;i<n;i++){box.insertAdjacentHTML('beforeend',`<div><label>Nome giocatore ${i+1}</label><input id="name${i}" value="Giocatore ${i+1}" /></div>`);} }
+
+  function initGame(){
+    const humans=+$('#humanCount').value, diff=$('#difficulty').value;
+    audio.enabled=$('#audio').value==='on';
+    state={
+      round:1,turn:0,angle:0,animating:false,spinValue:null,spun:false,bonus:false,best:loadLocal().best||0,
+      difficulty:diff,players:[],used:new Set(),phrase:'',category:'',revealed:[]
+    };
+    for(let i=0;i<humans;i++) state.players.push({name:($('#name'+i).value||`Giocatore ${i+1}`).trim(),cpu:false,round:0,total:0,jolly:false});
+    if(humans===1){state.players.push({name:'CPU Alfa',cpu:true,round:0,total:0,jolly:false},{name:'CPU Beta',cpu:true,round:0,total:0,jolly:false});}
+    startRound(true);showScreen('game');updateUI();maybeCpuTurn();
+  }
+
+  function startRound(first=false){
+    state.players.forEach(p=>p.round=0);state.used.clear();state.spinValue=null;state.spun=false;state.bonus=false;
+    const [cat,ph]=PHRASES[Math.floor(Math.random()*PHRASES.length)]; state.category=cat; state.phrase=ph.toUpperCase();
+    state.revealed=[...state.phrase].map(ch=>!/[A-Z]/.test(ch));
+    message(first?'Inizia la partita!':'Nuovo round iniziato!'); $('#spinResult').textContent='Risultato ruota: -';
+    updateUI();
+  }
+
+  function message(t){$('#message').textContent=t;}
+  function current(){return state.players[state.turn];}
+  function nextTurn(){state.turn=(state.turn+1)%state.players.length;state.spun=false;state.spinValue=null;state.bonus=false;message(`Turno di ${current().name}`);updatePlayers();maybeCpuTurn();}
+
+  function drawWheel(){
+    const c=$('#wheel'),x=c.getContext('2d'),cx=250,cy=250,R=220,seg=WHEEL.length,step=(Math.PI*2)/seg;
+    x.clearRect(0,0,c.width,c.height);x.save();x.translate(cx,cy);x.rotate(state.angle);
+    for(let i=0;i<seg;i++){x.beginPath();x.moveTo(0,0);x.arc(0,0,R,i*step,(i+1)*step);x.closePath();x.fillStyle=`hsl(${(i*360)/seg} 85% 56%)`;x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.stroke();x.save();x.rotate(i*step+step/2);x.fillStyle='#fff';x.font='bold 18px sans-serif';x.textAlign='right';x.fillText(String(WHEEL[i]),R-12,6);x.restore();}
+    x.beginPath();x.arc(0,0,34,0,Math.PI*2);x.fillStyle='#09102a';x.fill();x.restore();
+  }
+
+  function spin(){
+    if(state.animating) return;
+    state.animating=true;audio.click();
+    const startAngle=state.angle,target=startAngle+(Math.random()*7+7)*Math.PI,duration=2600,start=performance.now();
+    const ticker=setInterval(()=>audio.tone(250+Math.random()*180,.02,'square',.01),105);
+    const frame=(now)=>{
+      const t=Math.min((now-start)/duration,1),ease=1-Math.pow(1-t,3);
+      state.angle=startAngle+(target-startAngle)*ease;drawWheel();
+      if(t<1) requestAnimationFrame(frame);
+      else{
+        clearInterval(ticker);state.animating=false;
+        const seg=WHEEL.length,step=(Math.PI*2)/seg;
+        const corrected=(Math.PI*1.5 - (state.angle%(Math.PI*2)) + Math.PI*2)%(Math.PI*2);
+        const idx=Math.floor(corrected/step)%seg; const result=WHEEL[idx];
+        $('#spinResult').textContent='Risultato ruota: '+result;
+        applyWheelResult(result);updateUI();maybeCpuTurn();
+      }
+    };
+    requestAnimationFrame(frame);
+  }
+
+  function applyWheelResult(r){
+    const p=current();
+    if(r==='Bancarotta'){
+      if(p.jolly){p.jolly=false;message(`${p.name} usa il Jolly e salva il punteggio!`);}
+      else {p.round=0;audio.bankrupt();message('Bancarotta! Punteggio round azzerato.');nextTurn();}
+      return;
+    }
+    if(r==='Perdi turno'){
+      if(p.jolly){p.jolly=false;message(`${p.name} usa il Jolly e non perde il turno.`);state.spun=false;}
+      else {audio.err();message('Perdi turno!');nextTurn();}
+      return;
+    }
+    if(r==='Jolly'){p.jolly=true;audio.ok();message(`${p.name} ottiene un Jolly.`);state.spun=false;return;}
+    if(r==='Bonus'){state.spinValue=500;state.spun=true;state.bonus=true;message('Bonus: prossima consonante vale doppio!');return;}
+    state.spinValue=r;state.spun=true;message(`${p.name} può giocare una consonante da ${r} punti.`);
+  }
+
+  function renderBoard(){const b=$('#board');b.innerHTML='';[...state.phrase].forEach((ch,i)=>{const d=document.createElement('div');if(!/[A-Z]/.test(ch))d.className='tile '+(ch===' ' ? 'space':'punct');else d.className='tile';d.textContent=state.revealed[i]?ch:'■';b.appendChild(d);});}
+  function updatePlayers(){$('#players').innerHTML=state.players.map((p,i)=>`<div class="player ${i===state.turn?'active':''}"><strong>${p.name}${p.cpu?' 🤖':''}</strong><br>Round: ${p.round} pt<br>Totale: ${p.total} pt<br>Jolly: ${p.jolly?'Sì':'No'}</div>`).join('');}
+  function renderKeyboard(){const k=$('#keyboard');k.innerHTML='';for(const l of LETTERS){const b=document.createElement('button');b.className='key';b.textContent=l;b.dataset.letter=l;if(state.used.has(l))b.disabled=true;k.appendChild(b);} }
+  function updateUI(){ $('#roundLabel').textContent=`Round ${state.round}/${ROUND_COUNT}`;$('#category').textContent='Categoria: '+state.category;$('#bestScore').textContent=state.best;renderBoard();updatePlayers();renderKeyboard();saveLocal(); }
+
+  function revealLetter(letter){let hits=0;[...state.phrase].forEach((ch,i)=>{if(ch===letter&&!state.revealed[i]){state.revealed[i]=true;hits++;}});return hits;}
+  function solved(){return state.revealed.every(Boolean);}
+
+  function tryLetter(letter){
+    if(!letter||!LETTERS.includes(letter)||state.used.has(letter)||state.animating) return;
+    const p=current(),isVowel=VOWELS.includes(letter);
+    if(isVowel){if(p.round<250){message('Punti insufficienti per comprare una vocale.');audio.err();return;}p.round-=250;}
+    else if(!state.spun){message('Prima devi girare la ruota.');audio.err();return;}
+
+    state.used.add(letter);
+    const hits=revealLetter(letter);
+    if(hits>0){
+      audio.ok();
+      if(isVowel) message(`Vocale ${letter} trovata ${hits} volta/e.`);
+      else {
+        const gain=state.spinValue*(state.bonus?2:1)*hits;p.round+=gain;
+        message(`Consonante ${letter} trovata ${hits} volta/e. +${gain} punti.`);
+      }
+      state.spun=false;state.bonus=false;
+      updateUI();
+      if(solved()) return finalizeRound(p.name);
+      maybeCpuTurn();
+    } else {
+      audio.err();message(`La lettera ${letter} non è presente.`);updateUI();nextTurn();
+    }
+  }
+
+  function finalizeRound(winnerName){
+    const p=current();p.total+=p.round;state.best=Math.max(state.best,...state.players.map(x=>x.total));audio.win();
+    message(`${winnerName} vince il round!`);
+    if(state.round>=ROUND_COUNT){setTimeout(endGame,900);return;}
+    setTimeout(()=>{state.round++;startRound();},1000);
+  }
+
+  function solvePhrase(answer){
+    if(normalize(answer)===normalize(state.phrase)){finalizeRound(current().name);} else {audio.err();message('Soluzione errata, turno perso.');nextTurn();}
+  }
+
+  function endGame(){
+    showScreen('end');
+    const rank=[...state.players].sort((a,b)=>b.total-a.total);
+    $('#winner').textContent=`Vincitore: ${rank[0].name} con ${rank[0].total} punti.`;
+    $('#ranking').innerHTML=rank.map(p=>`<li>${p.name}: ${p.total} pt</li>`).join('');
+  }
+
+  function cpuPickConsonant(){
+    const available=LETTERS.filter(l=>!state.used.has(l)&&!VOWELS.includes(l));
+    if(state.difficulty==='facile') return available[Math.floor(Math.random()*available.length)];
+    const freq=['R','S','T','N','L','C','D','M','P','G','B','F','V','Q','Z','H'];
+    if(state.difficulty==='media') return freq.find(x=>available.includes(x)) || available[0];
+    const inPhrase=[...new Set([...state.phrase].filter(ch=>/[A-Z]/.test(ch)&&!state.used.has(ch)&&!VOWELS.includes(ch)))];
+    if(inPhrase.length&&Math.random()<.82) return inPhrase[Math.floor(Math.random()*inPhrase.length)];
+    return freq.find(x=>available.includes(x)) || available[0];
+  }
+  function cpuPickVowel(){
+    const available=LETTERS.filter(l=>!state.used.has(l)&&VOWELS.includes(l));
+    if(!available.length) return null;
+    if(state.difficulty==='facile') return available[Math.floor(Math.random()*available.length)];
+    if(state.difficulty==='media') return ['A','E','I','O','U'].find(x=>available.includes(x));
+    const inPhrase=[...new Set([...state.phrase].filter(ch=>VOWELS.includes(ch)&&!state.used.has(ch)))];
+    return (inPhrase[0]||available[0]);
+  }
+  function maybeCpuTurn(){
+    if(state.animating||!current().cpu) return;
+    setTimeout(()=>{
+      if(!current().cpu||state.animating) return;
+      const revealedRatio=state.revealed.filter(Boolean).length/state.revealed.length;
+      const solveChance=state.difficulty==='difficile'?revealedRatio*.75:state.difficulty==='media'?revealedRatio*.45:revealedRatio*.2;
+      if(revealedRatio>.5 && Math.random()<solveChance){solvePhrase(state.phrase);return;}
+      if(current().round>=250 && Math.random()<(state.difficulty==='difficile'?0.45:0.28)){
+        const v=cpuPickVowel(); if(v) {tryLetter(v);return;}
+      }
+      if(!state.spun) spin(); else tryLetter(cpuPickConsonant());
+    },700);
+  }
+
+  // Eventi UI
+  $('#humanCount').addEventListener('change',buildNameInputs);
+  $('#startBtn').addEventListener('click',initGame);
+  $('#spinBtn').addEventListener('click',()=>{if(!current().cpu)spin();});
+  $('#buyBtn').addEventListener('click',()=>{if(current().cpu)return;const letter=prompt('Scegli una vocale (A, E, I, O, U):','A'); if(letter) tryLetter(letter.trim().toUpperCase().slice(0,1));});
+  $('#solveBtn').addEventListener('click',()=>$('#solveBox').classList.toggle('active'));
+  $('#confirmSolve').addEventListener('click',()=>{if(current().cpu)return;solvePhrase($('#solveInput').value);$('#solveInput').value='';$('#solveBox').classList.remove('active');});
+  $('#nextRoundBtn').addEventListener('click',()=>{if(state.round<ROUND_COUNT){state.round++;startRound();} else endGame();});
+  $('#newGameBtn').addEventListener('click',()=>showScreen('start'));
+  $('#againBtn').addEventListener('click',()=>showScreen('start'));
+  $('#resetStorage').addEventListener('click',()=>{localStorage.removeItem('grandeRuotaSave');alert('Salvataggi cancellati.');});
+  $('#keyboard').addEventListener('click',(e)=>{const l=e.target?.dataset?.letter;if(!l||current().cpu)return;tryLetter(l);});
+
+  const saved=loadLocal(); if(saved.audio) $('#audio').value=saved.audio;
+  buildNameInputs(); drawWheel();
 })();
 </script>
 </body>
