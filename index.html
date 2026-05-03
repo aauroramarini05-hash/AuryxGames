@@ -1,128 +1,126 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuryxPlus – YouTube Explorer avanzato</title>
-    <!-- Google font for retro‑futuristic logo -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-    <!-- Animate On Scroll library for smooth fades and slides -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <!-- Our custom styles -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Grande Ruota delle Parole</title>
+  <style>
+    :root{--bg:#070b1a;--panel:#121a35;--panel2:#1b2752;--txt:#f3f6ff;--muted:#a9b5e5;--accent:#42e2ff;--good:#22d38a;--bad:#ff5f7a;--gold:#ffd35a;--shadow:0 12px 30px rgba(0,0,0,.35)}
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 30% 20%,#15275a,var(--bg) 45%);color:var(--txt);min-height:100vh}
+    .lights::before,.lights::after{content:"";position:fixed;inset:-20%;pointer-events:none;background:conic-gradient(from 0deg,transparent 0 30deg,rgba(66,226,255,.06) 30deg 60deg,transparent 60deg 90deg);animation:spin 16s linear infinite;z-index:-1}.lights::after{animation-direction:reverse;animation-duration:24s}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .screen{display:none;max-width:1200px;margin:auto;padding:16px}.screen.active{display:block}
+    .card{background:linear-gradient(170deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+    h1,h2,h3{margin:.2rem 0 .8rem;text-align:center}
+    .btn{border:0;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#2a78ff,#28b8ff);color:white;font-weight:700;cursor:pointer;transition:.2s transform,.2s opacity}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn.alt{background:linear-gradient(90deg,#2c355f,#46579a)}.btn.warn{background:linear-gradient(90deg,#b23a57,#ff5f7a)}
+    .grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0d1330;color:#fff}
+    label{font-size:.9rem;color:var(--muted)}
+    .main-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:14px}.wheel-wrap{display:flex;justify-content:center;align-items:center;position:relative}
+    #wheel{width:min(88vw,420px);height:min(88vw,420px);filter:drop-shadow(0 12px 20px rgba(0,0,0,.35))}
+    .pointer{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:26px solid #ffd35a;filter:drop-shadow(0 2px 4px #000)}
+    .board{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;min-height:130px;background:#0f1738;border-radius:14px}
+    .tile{width:34px;height:42px;display:flex;align-items:center;justify-content:center;background:#1e2b61;border-radius:8px;font-size:1.2rem;font-weight:800;border:1px solid rgba(255,255,255,.1);transition:.22s}
+    .tile.space,.tile.punct{background:transparent;border-color:transparent;color:#95a3dd}
+    .tile.reveal{animation:pop .3s ease}@keyframes pop{0%{transform:scale(.6)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+    .players{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.player{background:#0d1330;border:1px solid rgba(255,255,255,.12);padding:8px;border-radius:10px}.player.active{outline:2px solid var(--accent);box-shadow:0 0 0 4px rgba(66,226,255,.2)}
+    .kbd{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}.key{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#19265a;color:#fff;cursor:pointer}.key:disabled{opacity:.35}
+    .msg{margin:8px 0;padding:8px 10px;background:#0b1230;border-left:4px solid var(--accent);border-radius:8px;min-height:38px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{flex:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .flash{animation:flash .6s alternate 4}@keyframes flash{from{filter:brightness(1)}to{filter:brightness(1.35)}}
+    @media (max-width:900px){.main-layout{grid-template-columns:1fr}.kbd{grid-template-columns:repeat(7,1fr)}}
+  </style>
 </head>
-<body>
-    <!-- Sidebar navigation with categories -->
-    <aside>
-        <h1>Auryx<span class="plus">+</span></h1>
-        <nav>
-        <button id="btn-trending" data-cat="">Tendenze Generali</button>
-        <button data-cat="10">Tendenze Musica</button>
-        <button data-cat="20">Tendenze Gaming</button>
-        <button data-cat="24">Tendenze Intrattenimento</button>
-        <button data-cat="1">Tendenze Film &amp; Animazione</button>
-        <button data-cat="17">Tendenze Sport</button>
-        <button data-cat="22">Tendenze Persone &amp; Blog</button>
-        <button data-cat="23">Tendenze Commedia</button>
-        <button data-cat="25">Tendenze News &amp; Politica</button>
-        <button data-cat="26">Tendenze How‑To &amp; Style</button>
-        <button data-cat="27">Tendenze Educazione</button>
-        <button data-cat="28">Tendenze Scienza &amp; Tecnologia</button>
-        <hr>
-        <!-- Live counters sections -->
-        <button data-page="live-subs">Live Iscritti</button>
-        <button data-page="live-views">Live Visualizzazioni</button>
-        <hr>
-        <button id="btn-latest">Ultimi Video</button>
-        </nav>
-    </aside>
-
-    <!-- Main content area -->
-    <main>
-        <!-- Search controls -->
-        <section id="search-bar">
-            <input type="text" id="search-input" placeholder="Cerca video o canale…" aria-label="campo ricerca">
-            <button id="search-btn" aria-label="Cerca">Cerca</button>
-            <!-- Settings button opens the preferences panel -->
-            <button id="settings-btn" class="icon-btn" aria-label="Impostazioni">⚙️</button>
-        </section>
-        <!-- Stats bar used to display aggregated info when needed -->
-        <section id="stats-bar" class="hidden"></section>
-        <!-- Container for video cards -->
-        <section id="video-list" data-aos="fade-up">
-            <p>Caricamento tendenze…</p>
-        </section>
-    </main>
-
-    <!-- Modal for detailed view -->
-    <div id="modal" class="modal hidden">
-        <div class="modal-content" id="modal-content">
-            <button id="modal-close" aria-label="Chiudi dettagli">×</button>
-            <!-- Content populated by JS -->
+<body class="lights">
+  <main>
+    <section id="start" class="screen active">
+      <div class="card">
+        <h1>🎯 La Grande Ruota delle Parole</h1>
+        <p style="text-align:center;color:var(--muted)">Quiz televisivo originale ispirato ai giochi di frasi e fortuna.</p>
+        <div class="grid g3">
+          <div><label>Numero giocatori umani</label><select id="numPlayers"><option>1</option><option selected>2</option><option>3</option></select></div>
+          <div><label>Difficoltà CPU</label><select id="difficulty"><option value="facile">Facile</option><option value="media" selected>Media</option><option value="difficile">Difficile</option></select></div>
+          <div><label>Audio</label><select id="audioMode"><option value="on">Attivo</option><option value="off">Silenzioso</option></select></div>
         </div>
-    </div>
-
-    <!-- Settings modal for user preferences -->
-    <div id="settings-modal" class="modal hidden">
-        <div class="modal-content settings-content">
-            <button id="settings-close" aria-label="Chiudi impostazioni">×</button>
-            <h2>Impostazioni</h2>
-            <form id="settings-form">
-                <label>Regione:
-                    <select id="setting-region">
-                        <option value="IT">Italia</option>
-                        <option value="US">USA</option>
-                        <option value="GB">Regno Unito</option>
-                        <option value="DE">Germania</option>
-                        <option value="FR">Francia</option>
-                        <option value="ES">Spagna</option>
-                    </select>
-                </label>
-                <label>Numero risultati:
-                    <select id="setting-maxResults">
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="8">8</option>
-                        <option value="12">12</option>
-                    </select>
-                </label>
-                <label>Tema:
-                    <select id="setting-theme">
-                        <option value="dark">Scuro</option>
-                        <option value="light">Chiaro</option>
-                    </select>
-                </label>
-                <label>Auto‑refresh tendenze (minuti):
-                    <input type="number" id="setting-refresh" min="0" value="0">
-                </label>
-                <button type="submit" class="settings-save">Salva</button>
-            </form>
+        <div id="names" class="grid g3" style="margin-top:10px"></div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn" id="newGameBtn">Nuova partita</button>
+          <button class="btn alt" id="resetSave">Reset salvataggi</button>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <!-- Video player overlay with custom controls -->
-    <div id="player-overlay" class="modal hidden">
-        <div class="player-wrapper">
-            <div id="player-container"></div>
-            <div class="player-controls">
-                <button id="play-pause">▶</button>
-                <span id="current-time">0:00</span>
-                <input type="range" id="progress-bar" min="0" max="100" value="0">
-                <span id="duration-time">0:00</span>
-                <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="1">
-                <button id="fullscreen-btn" aria-label="Schermo intero">⛶</button>
-                <button id="player-close" aria-label="Chiudi player">×</button>
-            </div>
+    <section id="game" class="screen">
+      <div class="topbar"><h2 id="roundTitle">Round 1/3</h2><div>Miglior punteggio: <strong id="bestScore">0</strong></div></div>
+      <div class="main-layout">
+        <div class="card wheel-wrap"><div class="pointer"></div><canvas id="wheel" width="460" height="460"></canvas></div>
+        <div class="card">
+          <h3 id="category"></h3>
+          <div id="board" class="board"></div>
+          <div id="message" class="msg">Benvenuti in studio!</div>
+          <div class="row"><button class="btn" id="spinBtn">Gira la ruota</button><button class="btn alt" id="buyVowelBtn">Compra vocale (-250)</button><button class="btn alt" id="solveBtn">Risolvi</button></div>
+          <div class="row" style="margin-top:8px"><button class="btn alt" id="newRoundBtn">Nuovo round</button><button class="btn warn" id="restartBtn">Nuova partita</button></div>
+          <p id="spinResult" style="text-align:center;color:var(--gold);font-weight:700"></p>
         </div>
-    </div>
+      </div>
+      <div class="card" style="margin-top:12px"><h3>Giocatori</h3><div id="players" class="players"></div></div>
+      <div class="card" style="margin-top:12px"><h3>Tastiera</h3><div id="keyboard" class="kbd"></div></div>
+    </section>
 
-    <!-- AOS library -->
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <!-- Chart.js for optional charts; loaded only when needed -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- YouTube Iframe API for custom player -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <!-- Main script -->
-    <script src="script.js"></script>
+    <section id="end" class="screen"><div class="card"><h2>🏆 Partita conclusa</h2><p id="winner"></p><ol id="ranking"></ol><button class="btn" id="playAgain">Rigioca</button></div></section>
+  </main>
+<script>
+(()=>{
+const phrases=[
+['Proverbi','Chi dorme non piglia pesci'],['Proverbi','Tra il dire e il fare c e di mezzo il mare'],['Proverbi','Ride bene chi ride ultimo'],['Proverbi','Meglio tardi che mai'],['Proverbi','L abito non fa il monaco'],['Proverbi','Rosso di sera bel tempo si spera'],['Cinema','La dolce vita'],['Cinema','Nuovo cinema paradiso'],['Cinema','Il postino'],['Cinema','La grande bellezza'],['Cinema','Perfetti sconosciuti'],['Cinema','Mediterraneo'],['Musica','Nel blu dipinto di blu'],['Musica','Azzurro'],['Musica','L italiano vero'],['Musica','Con te partiro'],['Musica','Viva la vita'],['Geografia','Roma caput mundi'],['Geografia','Il giro d italia'],['Geografia','La laguna di venezia'],['Geografia','Il vesuvio domina il golfo'],['Geografia','Le cinque terre'],['Cucina italiana','Spaghetti alla carbonara'],['Cucina italiana','Risotto alla milanese'],['Cucina italiana','Pizza margherita'],['Cucina italiana','Tiramisu fatto in casa'],['Cucina italiana','Pesto genovese'],['Sport','Calcio di rigore'],['Sport','Campionato di serie a'],['Sport','Vittoria al fotofinish'],['Sport','Maratona cittadina'],['Sport','Coppa italia'],['Cultura generale','La penna e piu forte della spada'],['Cultura generale','Il sapere non pesa'],['Cultura generale','Biblioteca nazionale'],['Cultura generale','Scienza e coscienza'],['Modi di dire','In bocca al lupo'],['Modi di dire','Acqua in bocca'],['Modi di dire','Avere le mani in pasta'],['Modi di dire','Essere al settimo cielo'],['Modi di dire','Prendere due piccioni con una fava'],['Modi di dire','Andare d accordo']
+];
+const wheel=[100,200,300,400,500,750,1000,'Bancarotta','Perdi turno','Jolly','Bonus'];
+const vowels='AEIOU',letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+let state,audioCtx,mute=false;
+const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+const norm=s=>s.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z]/g,'');
+function beep(f=400,d=.08,t='sine',v=.03){if(mute)return;audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+function save(){localStorage.setItem('grandeRuotaSave',JSON.stringify({best:state.best,names:state.players.map(p=>p.name),audio:mute?'off':'on'}))}
+function load(){try{return JSON.parse(localStorage.getItem('grandeRuotaSave')||'{}')}catch{return {}}}
+function screen(id){qa('.screen').forEach(s=>s.classList.remove('active'));q('#'+id).classList.add('active')}
+function initNames(){const n=+q('#numPlayers').value;const wrap=q('#names');wrap.innerHTML='';for(let i=0;i<n;i++)wrap.insertAdjacentHTML('beforeend',`<div><label>Nome giocatore ${i+1}</label><input id="p${i}" value="Giocatore ${i+1}"></div>`)}
+function startGame(){const n=+q('#numPlayers').value,diff=q('#difficulty').value;mute=q('#audioMode').value==='off';const saved=load();state={round:1,maxRounds:3,turn:0,spun:false,spinValue:0,bonus:false,used:new Set(),phrase:'',category:'',revealed:[],difficulty:diff,best:saved.best||0,players:[]};for(let i=0;i<n;i++)state.players.push({name:q('#p'+i).value.trim()||`Giocatore ${i+1}`,cpu:false,round:0,total:0,jolly:false});if(n===1){state.players.push({name:'CPU Alfa',cpu:true,round:0,total:0,jolly:false},{name:'CPU Beta',cpu:true,round:0,total:0,jolly:false})}
+newRound(true);screen('game');updateAll();cpuTurn();}
+function pickPhrase(){let idx=Math.floor(Math.random()*phrases.length);let [cat,ph]=phrases[idx];state.category=cat;state.phrase=ph.toUpperCase();state.revealed=[...state.phrase].map(ch=>!/[A-Z]/.test(ch));state.used.clear()}
+function renderBoard(){const b=q('#board');b.innerHTML='';[...state.phrase].forEach((ch,i)=>{const d=document.createElement('div');d.className='tile '+(!/[A-Z]/.test(ch)?(/[ ]/.test(ch)?'space':'punct'):'');d.textContent=state.revealed[i]?ch:'■';b.appendChild(d)})}
+function renderPlayers(){q('#players').innerHTML=state.players.map((p,i)=>`<div class="player ${i===state.turn?'active':''}"><strong>${p.name}${p.cpu?' 🤖':''}</strong><br>Round: ${p.round} pt<br>Totale: ${p.total} pt<br>Jolly: ${p.jolly?'Sì':'No'}</div>`).join('')}
+function renderKbd(){q('#keyboard').innerHTML=letters.map(l=>`<button class="key" data-l="${l}" ${state.used.has(l)?'disabled':''}>${l}</button>`).join('')}
+function msg(t){q('#message').textContent=t}
+function nextTurn(){state.spun=false;state.bonus=false;state.spinValue=0;state.turn=(state.turn+1)%state.players.length;renderPlayers();msg(`Turno a ${state.players[state.turn].name}`);q('#game').classList.add('flash');setTimeout(()=>q('#game').classList.remove('flash'),500);cpuTurn()}
+function revealLetter(l){let c=0;[...state.phrase].forEach((ch,i)=>{if(ch===l&&!state.revealed[i]){state.revealed[i]=true;c++}});renderBoard();return c}
+function allRevealed(){return state.revealed.every(Boolean)}
+function scoreFreqLetters(){return ['R','S','T','N','L','C','D','M','P','G','B','F','V','H','Q','Z','J','K','W','X','Y']}
+function chooseCpuLetter(vowel=false){let pool=letters.filter(l=>!state.used.has(l)&&((vowel&&vowels.includes(l))||(!vowel&&!vowels.includes(l))));if(state.difficulty==='facile')return pool[Math.floor(Math.random()*pool.length)];if(state.difficulty==='media'){const pref=(vowel?['A','E','I','O','U']:scoreFreqLetters());for(const p of pref)if(pool.includes(p))return p;return pool[0]}const target=[...new Set([...state.phrase].filter(ch=>/[A-Z]/.test(ch)&&!state.used.has(ch)&&((vowel&&vowels.includes(ch))||(!vowel&&!vowels.includes(ch))))];if(target.length&&Math.random()<.8)return target[Math.floor(Math.random()*target.length)];const pref=(vowel?['A','E','I','O','U']:scoreFreqLetters());return pref.find(p=>pool.includes(p))||pool[0]}
+function solveAttempt(name,byCpu=false){let ans=byCpu?state.phrase:q('#solveInput')?.value||prompt('Inserisci la frase completa:')||'';if(norm(ans)===norm(state.phrase)){beep(740,.2,'triangle');state.players[state.turn].total+=state.players[state.turn].round;state.best=Math.max(state.best,...state.players.map(p=>p.total));save();msg(`${name} ha risolto la frase!`);if(state.round>=state.maxRounds)return endGame();state.round++;setTimeout(()=>newRound(false),900)} else {beep(160,.15,'sawtooth');msg('Soluzione errata. Turno perso.');nextTurn()}updateAll()}
+function applyWheel(res){const p=state.players[state.turn];if(res==='Bancarotta'){if(p.jolly){p.jolly=false;msg(`${p.name} usa il Jolly e evita la Bancarotta!`)}else{p.round=0;msg('Bancarotta! Punteggio round azzerato.');beep(100,.35,'square');nextTurn()}return false}
+if(res==='Perdi turno'){if(p.jolly){p.jolly=false;msg(`${p.name} usa il Jolly e continua!`);return true;}msg('Perdi turno!');nextTurn();return false}
+if(res==='Jolly'){p.jolly=true;msg(`${p.name} ha guadagnato un Jolly!`);state.spun=false;renderPlayers();return false}
+if(res==='Bonus'){state.bonus=true;msg('Bonus attivo: prossima consonante raddoppia!');state.spinValue=500;state.spun=true;return true}
+state.spinValue=res;state.spun=true;msg(`Hai ottenuto ${res} punti.`);return true}
+function chooseLetter(l){const p=state.players[state.turn];if(state.used.has(l))return;const isV=vowels.includes(l);if(isV){if(p.round<250){msg('Punti insufficienti per comprare una vocale.');return}p.round-=250}
+if(!isV&&!state.spun){msg('Devi girare la ruota prima di scegliere una consonante.');return}
+state.used.add(l);renderKbd();const hits=revealLetter(l);if(hits>0){beep(580,.1);if(isV){msg(`Vocale ${l} trovata (${hits}).`)}else{let val=state.spinValue*(state.bonus?2:1)*hits;p.round+=val;msg(`Consonante ${l} trovata ${hits} volte: +${val} pt`)}state.spun=false;state.bonus=false;if(allRevealed())return solveAttempt(p.name,true)}
+else{beep(220,.1,'square');msg(`La lettera ${l} non c'è.`);nextTurn()}updateAll();cpuTurn()}
+function spinWheel(){if(state.animating)return;state.animating=true;let ang=state.angle||0;let target=ang+(Math.random()*6+6)*Math.PI;let t=0,d=2200;beep(500,.06);const tick=setInterval(()=>beep(350+Math.random()*180,.02,'square',.015),110);
+const start=performance.now();function frame(now){t=now-start;let k=Math.min(t/d,1),ease=1-Math.pow(1-k,3);state.angle=ang+(target-ang)*ease;drawWheel();if(k<1)requestAnimationFrame(frame);else{clearInterval(tick);state.animating=false;const seg=wheel.length;let a=(state.angle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);let idx=Math.floor(((Math.PI*1.5-a+Math.PI*2)%(Math.PI*2))/(Math.PI*2/seg));let res=wheel[idx];q('#spinResult').textContent='Risultato ruota: '+res;applyWheel(res);updateAll();cpuTurn()}}requestAnimationFrame(frame)}
+function drawWheel(){const c=q('#wheel'),x=c.getContext('2d'),R=205,seg=wheel.length,step=(Math.PI*2)/seg;x.clearRect(0,0,c.width,c.height);x.save();x.translate(230,230);x.rotate(state.angle||0);for(let i=0;i<seg;i++){x.beginPath();x.moveTo(0,0);x.arc(0,0,R,i*step,(i+1)*step);x.closePath();x.fillStyle=`hsl(${i*360/seg} 80% 55%)`;x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.stroke();x.save();x.rotate(i*step+step/2);x.fillStyle='#fff';x.font='bold 18px sans-serif';x.textAlign='right';x.fillText(wheel[i],R-12,6);x.restore()}x.beginPath();x.arc(0,0,36,0,Math.PI*2);x.fillStyle='#0c1230';x.fill();x.restore()}
+function newRound(first=false){state.players.forEach(p=>p.round=0);pickPhrase();state.spun=false;state.spinValue=0;q('#spinResult').textContent='';msg(first?'Inizia la partita!':'Nuovo round iniziato!');updateAll()}
+function endGame(){screen('end');let rank=[...state.players].sort((a,b)=>b.total-a.total);q('#winner').textContent=`Vincitore: ${rank[0].name} con ${rank[0].total} punti`;q('#ranking').innerHTML=rank.map(p=>`<li>${p.name}: ${p.total} pt</li>`).join('')}
+function cpuTurn(){const p=state.players[state.turn];if(!p?.cpu||state.animating)return;setTimeout(()=>{let ratio=state.revealed.filter(Boolean).length/state.revealed.length;let trySolve=Math.random()<(state.difficulty==='difficile'?ratio*.7:state.difficulty==='media'?ratio*.4:ratio*.2);if(trySolve&&ratio>.45)return solveAttempt(p.name,true);
+if(p.round>=250&&Math.random()<.35){chooseLetter(chooseCpuLetter(true));return}
+if(!state.spun)spinWheel();else chooseLetter(chooseCpuLetter(false));},700)}
+function updateAll(){q('#roundTitle').textContent=`Round ${state.round}/${state.maxRounds}`;q('#category').textContent='Categoria: '+state.category;renderBoard();renderPlayers();renderKbd();q('#bestScore').textContent=state.best;save()}
+q('#numPlayers').addEventListener('change',initNames);q('#newGameBtn').onclick=startGame;q('#spinBtn').onclick=()=>{spinWheel()};q('#buyVowelBtn').onclick=()=>chooseLetter(prompt('Scegli vocale (A,E,I,O,U):')?.toUpperCase().slice(0,1)||'');q('#solveBtn').onclick=()=>solveAttempt(state.players[state.turn].name,false);q('#newRoundBtn').onclick=()=>{if(state.round<state.maxRounds){state.round++;newRound(false)}else endGame()};q('#restartBtn').onclick=()=>screen('start');q('#playAgain').onclick=()=>screen('start');
+q('#resetSave').onclick=()=>{localStorage.removeItem('grandeRuotaSave');alert('Salvataggi resettati.')};q('#keyboard').addEventListener('click',e=>{if(e.target.dataset.l)chooseLetter(e.target.dataset.l)});
+const sv=load();if(sv.audio)q('#audioMode').value=sv.audio;initNames();drawWheel();
+})();
+</script>
 </body>
 </html>
